@@ -1,7 +1,7 @@
 # проверка сообщений по времени, что бы не отвечать на старые
 
 class Main
-	module Security
+	module CheckMessage
 
 	      def message_is_new(start_time, message)
 	        message_time = (defined? message.date) ? message.date : message.message.date

@@ -21,19 +21,21 @@ class Main
         start_bot_time = Time.now.to_i
 
         bot.listen do |message|
-          if Security.message_is_new(start_bot_time,message)
-          case message.text
-          when '/start'
+          if CheckMessage.message_is_new(start_bot_time,message)
+
             bot.api.send_message(
               chat_id: message.chat.id, 
-              text: "test",
+              text: "Название: #{Database.setup[1][1]}"
               )
-
-          end
+            bot.api.send_sticker(
+              chat_id: message.chat.id, 
+              sticker: Database.setup[1][2]
+              )
+           end
         end
         end
       end
-     end
+
 
 end
 
