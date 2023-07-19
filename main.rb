@@ -5,6 +5,8 @@ require './modules/database'
 require './modules/sendmessage'
 require './modules/sortmessage'
 require './modules/standartmessage'
+require './modules/inline_button.rb'
+require './menu.rb'
 
 
 # основной класс, запуск
@@ -20,19 +22,9 @@ class Main
         # время запуска для проверки сообщений старое или новое
         start_bot_time = Time.now.to_i
 
-        bot.listen do |message|
-          if CheckMessage.message_is_new(start_bot_time,message)
-
-            bot.api.send_message(
-              chat_id: message.chat.id, 
-              text: "Название: #{Database.setup[1][1]}"
-              )
-            bot.api.send_sticker(
-              chat_id: message.chat.id, 
-              sticker: Database.setup[1][2]
-              )
-           end
-        end
+          bot.listen do |message|
+          Sortmessage.sort_new_message(message, bot) if CheckMessage.message_is_new(start_bot_time,message)
+          end
         end
       end
 
