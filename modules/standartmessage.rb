@@ -15,10 +15,21 @@ class Main
 
 				when "/menu"
 
+					Learn.learn_status = nil
+					Menu.current_state = nil
+					Menu.history_state = nil
 					Menu.menu
 
+
 				else 
-					SendMessage.standart_message("команда не опознан вернитесь в меню")
+					# проверка , начался режим учебы или нет
+					if Learn.learn_status
+
+						Learn.start_learn("twst")
+					# если отправлено сообщение, а режим учебы не начался просим вернуться в меню
+					else
+						SendMessage.standart_message("команда не опознана вернитесь в меню")
+					end
 				end
 			end
 

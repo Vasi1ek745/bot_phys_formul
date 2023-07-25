@@ -1,9 +1,9 @@
-# сортировка сообщений, отделяет сообщения от кнопок и обычные
+# сортировка сообщений, отделяет сообщения обычные от кнопок
 
 class Main
 
 	module Sortmessage
-		
+
 		attr_accessor :message , :bot 
 				
 		def sort_new_message(message, bot)
@@ -18,6 +18,7 @@ class Main
 				StandartMessage.prepare
 			end
 
+
 		end
 
     module_function(
@@ -25,7 +26,8 @@ class Main
         :message,
         :message=,
         :bot,
-        :bot=
+        :bot=,
+
     )	
 	
 

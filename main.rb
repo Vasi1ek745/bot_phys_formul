@@ -6,7 +6,11 @@ require './modules/sendmessage'
 require './modules/sortmessage'
 require './modules/standartmessage'
 require './modules/inline_button.rb'
-require './menu.rb'
+require './bot_logic/menu.rb'
+require './bot_logic/learn.rb'
+require 'byebug'
+require 'pry'
+
 
 
 # основной класс, запуск

@@ -1,75 +1,54 @@
-# обязательная структура CallBack "{menu:bool , table:table_name ,  name:name, id:id, references:references_id }"
-
 class Main
-  # Создает кнопки
-
   module Sortmessage
+    #  модуль для создания кнопок telegram
       module Inline_Button
-        def button(button_text, button_callback)
-          
-            Telegram::Bot::Types::InlineKeyboardButton.new(text: button_text, callback_data: button_callback)
-            
-        end
-        def button_from_bd_for_menu(callback_hash)
-            save_history(callback_hash)
-           
-            referenses_id = callback_hash["id"]
-            table = callback_hash["href"]
-            db = Database::setup(table, referenses_id)
-            href = next_table(table)
-           
-            i = 0 
-            
-            while i < db.size do 
-                db[i] = Telegram::Bot::Types::InlineKeyboardButton.new(
-                    text: "#{i+1}. #{db[i][1]}",
-                    callback_data:("menu:true,table_from:#{table},id:#{db[i][0]},href:#{href}")
-                    )
-                i+=1
+
+          def buttons(buttons)
+
+            kb = [] 
+            # создаем кнопки для вывода
+            buttons.each do |button|
+             kb << Telegram::Bot::Types::InlineKeyboardButton.new(text: button[:text], callback_data: button[:callback])
             end
-               
-            kb = row_two_button(db)
+            # что бы кнопки выводились столбиком по 2 вызываем функцию row_two_button, разобьет исходный массив на двумерный массив [[,],[,]]
+             kb = row_two_buttons(kb)
 
-            kb << [Telegram::Bot::Types::InlineKeyboardButton.new(text: "Выбрать все разделы ", callback_data: "all")]
-            kb << [Telegram::Bot::Types::InlineKeyboardButton.new(text: "Назад", callback_data: "menu:true,table_from:#{table},href:back")]
-            
-            
-            kb
-        end
+             # добавляем кнопки назад и выбрать все если находимся не в первом меню
+            if Menu.current_state[:position] != "start_menu"
+               kb << [Telegram::Bot::Types::InlineKeyboardButton.new(text: "Выбрать все разделы", callback_data: "link_to:all, id:")]
+               kb << [Telegram::Bot::Types::InlineKeyboardButton.new(text: "Назад", callback_data: "link_to:back, id:")]
+            end
 
-        def row_two_button(db)
+             kb
+
+
+          end
+
+          def row_two_buttons(kb)
+              row_two_buttons = []
               i = 0
-              kb = []
-            while i < db.size 
-                kb << [db[i], db[i+1]].compact 
+            while i < kb.size 
+                row_two_buttons << [kb[i], kb[i+1]].compact 
                 i+=2
             end 
-            kb
-        end
+            row_two_buttons
+          end
 
-        def save_history(kb)
-            Menu.history_for_back ||= []
-            Menu.history_for_back << kb
+          def data_format_to_button(data, next_table)
+            buttons = []
 
-        end
+            data.each {|x| buttons << {text: x[0], callback:"link_to:#{next_table}, id:#{x[1]}"} }
 
-        def next_table(table)
-           tabels = ["sections_physiks","topics","thems","formuls"]
-            tabels[tabels.index(table) + 1]
-        end
-        def previous_table(table)
-            tabels = ["sections_physiks","topics","thems","formuls"]
-            tabels[tabels.index(table) -1]
-        end
+           
 
-       module_function(
-            :button,
-            :button_from_bd_for_menu,
-            :next_table,
-            :previous_table,
-            :save_history,
-            :row_two_button
-            ) 
+            buttons
+
+
+          end
+ 
+          module_function :buttons, :row_two_buttons, :data_format_to_button
+
+
        end
   end
 end

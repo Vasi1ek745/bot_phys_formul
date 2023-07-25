@@ -14,6 +14,13 @@ class Main
 					parse_mode: 'html',
 					text: message
 					)
+			end	
+			def sticker_message(sticker_id)
+				chat = (defined? Sortmessage.message.chat.id) ? Sortmessage.message.chat.id : Sortmessage.message.message.chat.id
+				Sortmessage.bot.api.send_sticker(
+					chat_id: chat ,
+					sticker: sticker_id
+					)
 			end
 
 			def inline_message(message, kb, editless = false)
@@ -38,7 +45,7 @@ class Main
 		      end
 
 	      	def generate_inline_markup(kb)
-		           Telegram::Bot::Types::InlineKeyboardMarkup.new(
+	           Telegram::Bot::Types::InlineKeyboardMarkup.new(
     			  inline_keyboard: kb
         		)
 	  		end
@@ -47,7 +54,8 @@ class Main
 			module_function(
 				:standart_message,
 				:inline_message,
-				:generate_inline_markup
+				:generate_inline_markup,
+				:sticker_message
 			)
 		end
 	end

@@ -1,5 +1,6 @@
 # Обработка сообщений которые пришли от кнопок 
-# обязательная структура CallBack "{menu:bool , table:table_name , name:name, id:id, references:references_id }"
+
+# в кнопках обязательно callback в следующем формате "link_to:link_to,id:id"
 
 
 class Main
@@ -7,15 +8,17 @@ class Main
 	module Sortmessage
 
 		module CallbackMessage
-			attr_accessor :callback_message, :callback_hash
+			
+			# после получения CallBack, делаем из него хэш
+			# меняем текущее состояние, и снова вызывем меню
 
 			def prepare
+
 				callback_hash = callback_to_hash(Sortmessage.message.data)
-				if callback_hash["menu"]
-					Menu.menu(callback_hash)
-				else
-					SendMessage.standart_message(Sortmessage.message.data)
-				end
+				change_curent_state(callback_hash)
+				Menu.menu
+
+				
 			end
 
 			def callback_to_hash(callback)
@@ -25,11 +28,20 @@ class Main
 				h
 			end
 
+			def change_curent_state(callback_hash)
+
+				Menu.current_state[:previous_position] = Menu.current_state[:position]
+				Menu.current_state[:previous_id] = Menu.current_state[:current_id]
+				Menu.current_state[:position] = callback_hash["link_to"]
+				Menu.current_state[:current_id] = callback_hash["id"]
+
+			end
+
 			module_function(
 				:prepare,
 				:callback_to_hash,
-				:callback_hash,
-				:callback_hash=
+				:change_curent_state
+
 			)
 		end
 	end
