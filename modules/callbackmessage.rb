@@ -1,14 +1,12 @@
-# Обработка сообщений которые пришли от кнопок 
 
 # в кнопках обязательно callback в следующем формате "link_to:link_to,id:id"
-
 
 class Main
 
 	module Sortmessage
 
 		module CallbackMessage
-			
+			# Обработка сообщений которые пришли от кнопок меню 
 			# после получения CallBack, делаем из него хэш
 			# меняем текущее состояние, и снова вызывем меню
 
@@ -17,7 +15,6 @@ class Main
 				callback_hash = callback_to_hash(Sortmessage.message.data)
 				change_curent_state(callback_hash)
 				Menu.menu
-
 				
 			end
 
