@@ -14,7 +14,7 @@ class Main
 
 				callback_hash = callback_to_hash(Sortmessage.message.data)
 				change_curent_state(callback_hash)
-				Menu.menu
+				BotLogic::Menu.menu
 				
 			end
 
@@ -27,10 +27,10 @@ class Main
 
 			def change_curent_state(callback_hash)
 
-				Menu.current_state[:previous_position] = Menu.current_state[:position]
-				Menu.current_state[:previous_id] = Menu.current_state[:current_id]
-				Menu.current_state[:position] = callback_hash["link_to"]
-				Menu.current_state[:current_id] = callback_hash["id"]
+				BotLogic::Menu.current_state[:previous_position] = BotLogic::Menu.current_state[:position]
+				BotLogic::Menu.current_state[:previous_id] = BotLogic::Menu.current_state[:current_id]
+				BotLogic::Menu.current_state[:position] = callback_hash["link_to"]
+				BotLogic::Menu.current_state[:current_id] = callback_hash["id"]
 
 			end
 

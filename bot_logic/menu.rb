@@ -1,6 +1,4 @@
-class Main
-
-	module Sortmessage
+class BotLogic
 
 		module Menu
 
@@ -12,42 +10,48 @@ class Main
 
 			attr_accessor :current_state, :history_state
 
+			def initialize
+				Menu.current_state ||= {position:"start_menu",current_id:nil, previous_position:nil , previous_id: nil}
+				Menu.history_state ||= []
+				Menu.history_state << Menu.current_state.values
+			end
+
 			def menu
 
 				Menu.initialize	# инициализируем current_state и history_state если еще не созданы
 				
-				p Menu.current_state
+				
 				case Menu.current_state[:position]
 				when "start_menu"
 
-					buttons = Inline_Button.start_menu_buttons # кнопки для начального меню
-					kb = Inline_Button.buttons(buttons)					
-					SendMessage.inline_message("Чем хочешь заняться?", SendMessage::generate_inline_markup(kb))
+					buttons = Main::Sortmessage::Inline_Button.start_menu_buttons # кнопки для начального меню
+					kb = Main::Sortmessage::Inline_Button.buttons(buttons)					
+					Main::Sortmessage::SendMessage.inline_message("Чем хочешь заняться?", Main::Sortmessage::SendMessage::generate_inline_markup(kb))
 
 				when "sections"
 					# извлекаем данные из БД 
 					data = Database::data_from_table_for_button(Menu.current_state) 
 				    # обрабатываем кнопки до нужного формата
-				    buttons = Inline_Button.data_format_to_button(data, "topics")
-				    kb = Inline_Button.buttons(buttons)
+				    buttons = Main::Sortmessage::Inline_Button.data_format_to_button(data, "topics")
+				    kb = Main::Sortmessage::Inline_Button.buttons(buttons)
 
-				    SendMessage.inline_message("Какой раздел хочешь выбрать?", SendMessage::generate_inline_markup(kb), true)
+				    Main::Sortmessage::SendMessage.inline_message("Какой раздел хочешь выбрать?", Main::Sortmessage::SendMessage::generate_inline_markup(kb), true)
 
 				when "topics"
 
 					# извлекаем данные из БД 
 					data = Database::data_from_table_for_button(Menu.current_state) 
 				    # обрабатываем кнопки до нужного формата
-				    buttons = Inline_Button.data_format_to_button(data, "thems")
-				    kb = Inline_Button.buttons(buttons)
+				    buttons = Main::Sortmessage::Inline_Button.data_format_to_button(data, "thems")
+				    kb = Main::Sortmessage::Inline_Button.buttons(buttons)
 
-				    SendMessage.inline_message("Какой раздел хочешь выбрать?", SendMessage::generate_inline_markup(kb), true)
+				    Main::Sortmessage::SendMessage.inline_message("Какой раздел хочешь выбрать?", Main::Sortmessage::SendMessage::generate_inline_markup(kb), true)
 				
 				when "thems"
 
 					# когда дошли до определенной темы 
 					user_choice = Database::user_choice_thems(Menu.current_state)
-					SendMessage.standart_message("Вы выбрали: \n - #{user_choice}.\nНачинаем изучение формул. Для остановки отправьте /stop или вернитесь в /menu")
+					Main::Sortmessage::SendMessage.standart_message("Вы выбрали: \n - #{user_choice}.\nНачинаем изучение формул. Для остановки отправьте /stop или вернитесь в /menu")
 					Learn.start_learn(user_choice)
 
 				when "back"
@@ -66,16 +70,12 @@ class Main
 					end
 						user_choice_list = "\n"
 						user_choice.each {|x| user_choice_list+= " - " + x + "\n"}
-					SendMessage.standart_message("Вы выбрали:"+ user_choice_list+ "\nНачинаем изучение формул. Для остановки отправьте /stop или вернитесь в /menu")
+					Main::Sortmessage::SendMessage.standart_message("Вы выбрали:"+ user_choice_list+ "\nНачинаем изучение формул. Для остановки отправьте /stop или вернитесь в /menu")
+					
 					Learn.start_learn(user_choice)
-
+				else 
+					Main::Sortmessage::SendMessage.standart_message("Раздел еще в разработке")
 				end	
-			end
-			def initialize
-				Menu.current_state ||= {position:"start_menu",current_id:nil, previous_position:nil , previous_id: nil}
-				Menu.history_state ||= []
-				Menu.history_state << Menu.current_state.values
-				p "test"
 			end
 			def change_current_state_for_back
 				self.history_state = self.history_state.uniq[0..-3]
@@ -96,5 +96,5 @@ class Main
 			)
 
 		end
-	end
+
 end

@@ -1,7 +1,7 @@
 require 'telegram/bot'
 require './modules/checkmessage'
 require './modules/callbackmessage'
-require './modules/database'
+require './db/database'
 require './modules/sendmessage'
 require './modules/sortmessage'
 require './modules/standartmessage'
@@ -18,6 +18,8 @@ require 'pry'
 class Main
 
   def initialize(token)
+
+      Database.initialize
       
       @token = token
 
@@ -35,7 +37,13 @@ class Main
 
 end
 
-token = File.read("./bot_token")
-
-Main.new(token)
+# loop do
+#   begin
+  token = File.read("./bot_token")
+  BotLogic.new
+  Main.new(token)
+#   rescue StandardError => e
+#     p e
+#   end
+# end
 

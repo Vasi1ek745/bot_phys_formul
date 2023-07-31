@@ -8,7 +8,7 @@ class Main
             kb = create_buttons(buttons) # создаем кнопки для вывода
             kb = row_two_buttons(kb)    # разбиваем кнопки на 2 в ряд
             # добавляем кнопки назад и выбрать все, если находимся не в первом меню                          
-            kb = add_button_back_and_all(kb) if Menu.current_state[:position] != "start_menu" 
+            kb = add_button_back_and_all(kb) if BotLogic::Menu.current_state[:position] != "start_menu" 
             kb
         end
 
@@ -46,7 +46,7 @@ class Main
             buttons = [
                 {text:"Учить формулы", callback:"link_to:sections, id:"}, 
                 {text:"Решать задачи",callback:"link_to:solve_problems, id:"},
-                {text:"Посмотреть свою статистику",callback:"statistics"}
+                {text:"Посмотреть свою статистику",callback:"link_to:solve_problems, id:"}
             ]
         end
  

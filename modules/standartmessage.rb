@@ -10,28 +10,36 @@ class Main
 				case Sortmessage.message.text
 				when "/start"
 					# приветственное сообщение
-					SendMessage.standart_message("Приветствую тебя в боте для изучения формул по физике!Здесь ты можешь учить формулы и отслеживать статистику. Для дальнейше навигации используй /menu")
-
+					SendMessage.standart_message("Приветствую тебя в боте для изучения формул по физике! Здесь ты можешь:
+												 \n - Учить формулы \n - Отслеживать статистику \n - Решать задачи")
+					SendMessage.standart_message("Для навигации используй /menu")
+					SendMessage.standart_message("Для полноценной работы добавьте стикеры https://t.me/addstickers/formuls_mechanics")
+									
 
 				when "/menu"
-					# переход вменю, сбрасывает все текущие состояния
+					# переход в меню
 
-					Learn.learn_status = nil
-					Menu.current_state = nil
-					Menu.history_state = nil
-					Menu.menu
+					BotLogic::Menu.menu
+
 				when "/stop"
 
-					Learn.learn_status = nil
+					BotLogic::Learn.learn_status = nil
 					SendMessage.standart_message("Вы вышли из режима учебы")
 
 				else 
 					# проверка , начался режим учебы или нет
-					if Learn.learn_status
+					if BotLogic::Learn.learn_status
 
-						Learn.start_learn("twst")
-					# если отправлено сообщение, а режим учебы не начался просим вернуться в меню
+						if Sortmessage.message.sticker
+
+							BotLogic::Learn.check_answer(Sortmessage.message.sticker.file_unique_id)							
+
+						else
+							BotLogic::Learn.check_answer(Sortmessage.message.text)
+						end
+						
 					else
+					# если отправлено сообщение, а режим учебы не начался просим вернуться в меню
 						SendMessage.standart_message("команда не опознана вернитесь в меню")
 					end
 				end
