@@ -1,4 +1,6 @@
 require "sqlite3"
+require_relative "user_db"
+require "json"
 
 
 class Database
@@ -11,10 +13,10 @@ class Database
 	
 	def self.data_from_table_for_button(current_state)
 	
-		table = current_state[:position]
+		table = current_state["position"]
 		# если при вызове указан id , то делаем выборку по id если нет то вся таблица
-		if current_state[:current_id]
-			return @db.execute( "select #{table.chop}, id from #{table} WHERE #{current_state[:previous_position].chop}_id= #{current_state[:current_id]}" ) 
+		if current_state["current_id"]
+			return @db.execute( "select #{table.chop}, id from #{table} WHERE #{current_state["previous_position"].chop}_id= #{current_state["current_id"]}" ) 
 		else
 			 return @db.execute( "select #{table.chop}, id from #{table}" ) 
 		end
@@ -30,20 +32,20 @@ class Database
 
 	def self.user_choice_thems(current_state)		
 
-		table = current_state[:previous_position]
-		id = current_state[:current_id]		
+		table = current_state["previous_position"]
+		id = current_state["current_id"]		
 		@db.execute("SELECT #{table.chop} from #{table} WHERE id=#{id}").flatten[0]
 
 	end
 	def self.user_choice_all(current_state)		
 
-		table = current_state[:previous_position]
+		table = current_state["previous_position"]
 		@db.execute("SELECT #{table.chop} from #{table}").flatten
 
 	end
 	def self.user_choice_topics_with_section_id(current_state)
-		table = current_state[:previous_position]
-		section_id = current_state[:previous_id]	
+		table = current_state["previous_position"]
+		section_id = current_state["previous_id"]	
 		@db.execute("SELECT #{table.chop} from #{table} WHERE section_id=#{section_id}").flatten
 	end
 

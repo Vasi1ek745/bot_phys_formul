@@ -7,16 +7,16 @@ class BotLogic
 
 			attr_accessor :learn_status, :formuls_list, :right_answer, :counter_right_answer, :step_number
 
-			# у formuls_list следующтй формат [{formul:"formul", sticker_id:"sticker_id", them_id:"them_id",file_unique_id:"file_unique_id", them:"them"}]
+			# у formuls_list следующтй формат [{"formul"=>"formul", "sticker_id"=>"sticker_id", "them_id"=>"them_id","file_unique_id"=>"file_unique_id", "them"=>"them"}]
 			
 			def start_learn(user_choice)
-				p user_choice
+				
 				#  Запускаем режим обучения 
 				Learn.start(user_choice)
 
 				# объявляем о начале
 				Main::Sortmessage::SendMessage.standart_message("Первый этап, вам отправляется стикер, нужно выбрать название формулы.\nДля перехода на следующий этап нужно ответить 3 раза подряд без ошибок")
-				sleep(2.5)
+				# sleep(2.5)
 				# спрашиваем готовность
 				Learn.first_question
 			end
@@ -34,9 +34,10 @@ class BotLogic
 			def formuls_by_user_choice(user_choice)
 
 				# выбираем формулы из разделов которые запросил пользователь, если есть слово механика значит это все разделы
-			user_choice.include?("Механика") ? formuls = Database::select_formuls_from_all_section : formuls = Database::select_formuls_for_learn_by_topics(user_choice)
+				user_choice.include?("Механика") ? formuls = Database::select_formuls_from_all_section : formuls = Database::select_formuls_for_learn_by_topics(user_choice)
 				formuls_list = []			
-				formuls.each { |x| formuls_list << {formul:x[0], sticker_id:x[1], them_id:x[2],file_unique_id:x[3], them:x[4]} }
+				formuls.each { |x| formuls_list << {"formul"=>x[0], "sticker_id"=> x[1], "them_id"=> x[2],"file_unique_id"=> x[3], "them"=> x[4]} }
+				Database::change_formuls_list(Main::Sortmessage.user_id, formuls_list)
 				formuls_list
 
 
@@ -51,17 +52,17 @@ class BotLogic
 			end
 			def send_sticker_select_answer
 				formul = Learn.formuls_list.sample
-				sticker_id = formul[:sticker_id]
-				Learn.right_answer = "#{formul[:formul]}. #{formul[:them]}"
+				sticker_id = formul["sticker_id"]
+				Learn.right_answer = "#{formul["formul"]}. #{formul["them"]}"
 				Main::Sortmessage::SendMessage.sticker_message(sticker_id)
 				kb = answer_keybord_generate(right_answer)
 				Main::Sortmessage::SendMessage.inline_message("какая это формула?", kb)
 			end
 			def send_formul_select_sticker
 				formul = Learn.formuls_list.sample
-				Learn.right_answer = formul[:file_unique_id]
+				Learn.right_answer = formul["file_unique_id"]
 				Main::Sortmessage::SendMessage.standart_message("Отправь стикер")
-				Main::Sortmessage::SendMessage.standart_message("#{formul[:formul]}. #{formul[:them]}")
+				Main::Sortmessage::SendMessage.standart_message("#{formul["formul"]}. #{formul["them"]}")
 			end
 
 			def check_answer(answer)
@@ -119,7 +120,7 @@ class BotLogic
 			end
 			def answer_text
 				formul = formuls_list.sample
-				answer_text = "#{formul[:formul]}. #{formul[:them]}"
+				answer_text = "#{formul["formul"]}. #{formul["them"]}"
 			end
 
 

@@ -4,3 +4,5 @@ source 'https://rubygems.org'
 gem "byebug", "~> 11.1"
 
 gem "pry-byebug", "~> 3.10"
+
+gem "json", "~> 2.6"

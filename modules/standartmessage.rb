@@ -19,6 +19,7 @@ class Main
 				when "/menu"
 					# переход в меню
 
+					BotLogic::Menu.reset
 					BotLogic::Menu.menu
 
 				when "/stop"

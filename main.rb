@@ -29,7 +29,9 @@ class Main
         start_bot_time = Time.now.to_i
 
           bot.listen do |message|
-          Sortmessage.sort_new_message(message, bot) if CheckMessage.message_is_new(start_bot_time,message)
+              # Thread.start(message) do |message|
+                Sortmessage.sort_new_message(message, bot, message.from.id) if CheckMessage.message_is_new(start_bot_time,message)
+              # end
           end
         end
       end
