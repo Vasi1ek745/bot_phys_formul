@@ -29,7 +29,7 @@ class Main
 
 				else 
 					# проверка , начался режим учебы или нет
-					if BotLogic::Learn.learn_status
+					if Database::user_hash(Sortmessage.user_id)["learn_status"]
 
 						if Sortmessage.message.sticker
 

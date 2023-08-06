@@ -10,6 +10,16 @@ class Database
 	def self.initialize
 		@db = SQLite3::Database.new "./db/main.db"
 	end
+
+	def self.check_user(user)
+
+	 id_array =	@db.execute("SELECT user_id FROM Users").flatten
+	  unless id_array.include?(user.id) 
+	 
+  		@db.execute("INSERT into users (user_id, first_name, username) values( #{user.id}, '#{user.first_name}', '#{user.username}' ) ")
+	  end
+
+	end
 	
 	def self.data_from_table_for_button(current_state)
 	
@@ -58,7 +68,9 @@ class Database
 
 		topic_id = @db.execute("SELECT id FROM topics where Topic in ( #{topics} )").flatten
 
-		them_id = @db.execute("SELECT id FROM Thems WHERE topic_id  = #{topic_id[0]}").flatten
+		
+
+		them_id = @db.execute("SELECT id FROM Thems WHERE topic_id  in ( #{topic_id.join(',')} )  ").flatten
 
 		formuls = @db.execute("SELECT formul,sticker_id,them_id,file_unique_id,Them 
 									FROM Formuls,Thems 

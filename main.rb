@@ -30,6 +30,8 @@ class Main
 
           bot.listen do |message|
               # Thread.start(message) do |message|
+              
+                Database.check_user(message.from) if CheckMessage.message_is_new(start_bot_time,message)
                 Sortmessage.sort_new_message(message, bot, message.from.id) if CheckMessage.message_is_new(start_bot_time,message)
               # end
           end
