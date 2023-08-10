@@ -14,6 +14,7 @@ class Main
 												 \n - Учить формулы \n - Отслеживать статистику \n - Решать задачи")
 					SendMessage.standart_message("Для навигации используй /menu")
 					SendMessage.standart_message("Для полноценной работы добавьте стикеры https://t.me/addstickers/formuls_mechanics")
+					SendMessage.standart_message("Для полноценной работы добавьте стикеры https://t.me/addstickers/formuls_molecul")
 									
 
 				when "/menu"

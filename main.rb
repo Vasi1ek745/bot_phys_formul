@@ -33,7 +33,7 @@ class Main
               
                 Database.check_user(message.from) if CheckMessage.message_is_new(start_bot_time,message)
                 Sortmessage.sort_new_message(message, bot, message.from.id) if CheckMessage.message_is_new(start_bot_time,message)
-              # end
+               # end
           end
         end
       end
@@ -41,13 +41,18 @@ class Main
 
 end
 
-# loop do
-#   begin
+loop do
+  begin
   token = File.read("./bot_token")
   BotLogic.new
   Main.new(token)
-#   rescue StandardError => e
-#     p e
-#   end
-# end
+  rescue StandardError => e
+    # Sortmessage::SendMessage.standart_message("Произошла ошибка, пожалуйста вернитесь в /menu")
+    file = File.open("./log/log.txt", "a")
+    line = "*"*25
+    time = Time.now
+    file.write("\n#{line}\n\ #{time}\n#{e}\n\n")
+    file.close
+  end
+end
 
